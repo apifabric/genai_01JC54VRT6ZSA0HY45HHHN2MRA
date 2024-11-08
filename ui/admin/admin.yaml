@@ -1,0 +1,316 @@
+about:
+  date: November 08, 2024 05:45:16
+  recent_changes: works with modified safrs-react-admin
+  version: 0.0.0
+api_root: '{http_type}://{swagger_host}:{port}/{api}'
+authentication: '{system-default}'
+info:
+  number_relationships: 10
+  number_tables: 12
+info_toggle_checked: true
+resources:
+  Company:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: id
+    description: Represents a company entity containing company details.
+    info_list: Represents a company entity containing company details.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - company_id
+      name: DepartmentList
+      resource: Department
+    type: Company
+    user_key: name
+  Customer:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: email
+    - name: id
+    description: Company's customers, placing orders.
+    info_list: Company's customers, placing orders.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - customer_id
+      name: OrderList
+      resource: Order
+    type: Customer
+    user_key: name
+  Department:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: company_id
+      required: true
+    - name: id
+    description: Departments in a company, associated with employees.
+    info_list: Departments in a company, associated with employees.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - department_id
+      name: EmployeeList
+      resource: Employee
+    - direction: tomany
+      fks:
+      - department_id
+      name: ProjectList
+      resource: Project
+    - direction: toone
+      fks:
+      - company_id
+      name: company
+      resource: Company
+    type: Department
+    user_key: name
+  Employee:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: department_id
+      required: true
+    - name: id
+    description: Employees working within various departments in a company.
+    info_list: Employees working within various departments in a company.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - employee_id
+      name: OrderList
+      resource: Order
+    - direction: toone
+      fks:
+      - department_id
+      name: department
+      resource: Department
+    type: Employee
+    user_key: name
+  Inventory:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: product_id
+    - name: quantity
+      required: true
+    description: Inventory table tracking product stock levels.
+    info_list: Inventory table tracking product stock levels.
+    tab_groups:
+    - direction: toone
+      fks:
+      - product_id
+      name: product
+      resource: Product
+    type: Inventory
+    user_key: id
+  Invoice:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+    - name: total_amount
+      required: true
+    description: Invoices issued for customer orders.
+    info_list: Invoices issued for customer orders.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - invoice_id
+      name: PaymentList
+      resource: Payment
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Invoice
+    user_key: id
+  Order:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: customer_id
+    - name: employee_id
+    - name: date_created
+      type: DATETIME
+    description: Customer orders of products.
+    info_list: Customer orders of products.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - order_id
+      name: InvoiceList
+      resource: Invoice
+    - direction: tomany
+      fks:
+      - order_id
+      name: ShipmentList
+      resource: Shipment
+    - direction: toone
+      fks:
+      - customer_id
+      name: customer
+      resource: Customer
+    - direction: toone
+      fks:
+      - employee_id
+      name: employee
+      resource: Employee
+    type: Order
+    user_key: id
+  Payment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: invoice_id
+    - name: payment_date
+      type: DATETIME
+    - name: amount_paid
+      required: true
+    description: Payments received from customers for orders.
+    info_list: Payments received from customers for orders.
+    tab_groups:
+    - direction: toone
+      fks:
+      - invoice_id
+      name: invoice
+      resource: Invoice
+    type: Payment
+    user_key: id
+  Product:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: supplier_id
+    - name: price
+      required: true
+    - name: id
+    description: Products offered by the company.
+    info_list: Products offered by the company.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - product_id
+      name: InventoryList
+      resource: Inventory
+    - direction: toone
+      fks:
+      - supplier_id
+      name: supplier
+      resource: Supplier
+    type: Product
+    user_key: name
+  Project:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: department_id
+    - name: budget
+    - name: id
+    description: Company projects, involving employees.
+    info_list: Company projects, involving employees.
+    tab_groups:
+    - direction: toone
+      fks:
+      - department_id
+      name: department
+      resource: Department
+    type: Project
+    user_key: name
+  Shipment:
+    attributes:
+    - label: ' id*'
+      name: id
+      search: true
+      sort: true
+    - name: order_id
+    - name: shipped_date
+      type: DATETIME
+    description: Shipments made for orders.
+    info_list: Shipments made for orders.
+    tab_groups:
+    - direction: toone
+      fks:
+      - order_id
+      name: order
+      resource: Order
+    type: Shipment
+    user_key: id
+  Supplier:
+    attributes:
+    - label: ' name*'
+      name: name
+      required: true
+      search: true
+      sort: true
+    - name: id
+    description: Suppliers providing products to the company.
+    info_list: Suppliers providing products to the company.
+    tab_groups:
+    - direction: tomany
+      fks:
+      - supplier_id
+      name: ProductList
+      resource: Product
+    type: Supplier
+    user_key: name
+settings:
+  HomeJS: /admin-app/home.js
+  max_list_columns: 8
+  style_guide:
+    applicationLocales:
+    - en
+    - es
+    currency_symbol: $
+    currency_symbol_position: left
+    date_format: LL
+    decimal_max: '1000000000'
+    decimal_min: '0'
+    decimal_separator: .
+    detail_mode: tab
+    edit_on_mode: dblclick
+    exclude_listpicker: false
+    include_translation: 'false'
+    keycloak_client_id: alsclient
+    keycloak_realm: kcals
+    keycloak_url: http://localhost:8080
+    locale: en
+    max_decimal_digits: '4'
+    min_decimal_digits: '2'
+    new_mode: dialog
+    pick_style: list
+    row_height: small,
+    serviceType: OntimizeEE
+    startSessionPath: /auth/login
+    style: light
+    thousand_separator: ','
+    use_keycloak: 'false'

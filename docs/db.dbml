@@ -1,0 +1,108 @@
+// Copy this text, paste to https://dbdiagram.io/d
+// Or, https://databasediagram.com/app
+// Or, view in VSCode with extension: "DBML Live Preview"
+
+Project DBML {
+  Note: '''
+Company: Represents a company entity containing company details.
+Customer: Company's customers, placing orders.
+Department: Departments in a company, associated with employees.
+Employee: Employees working within various departments in a company.
+Inventory: Inventory table tracking product stock levels.
+Product: Products offered by the company.
+Invoice: Invoices issued for customer orders.
+Order: Customer orders of products.
+Payment: Payments received from customers for orders.
+Supplier: Suppliers providing products to the company.
+Project: Company projects, involving employees.
+Shipment: Shipments made for orders.
+'''
+}
+
+Table Company {
+    id INTEGER [primary key]
+    name VARCHAR 
+    }
+
+Table Customer {
+    id INTEGER [primary key]
+    name VARCHAR 
+    email VARCHAR 
+    }
+
+Table Department {
+    id INTEGER [primary key]
+    name VARCHAR 
+    company_id INTEGER 
+    }
+
+Table Employee {
+    id INTEGER [primary key]
+    name VARCHAR 
+    department_id INTEGER 
+    }
+
+Table Inventory {
+    id INTEGER [primary key]
+    product_id INTEGER 
+    quantity INTEGER 
+    }
+
+Table Product {
+    id INTEGER [primary key]
+    name VARCHAR 
+    price FLOAT 
+    supplier_id INTEGER 
+    }
+
+Table Invoice {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    total_amount FLOAT 
+    }
+
+Table Order {
+    id INTEGER [primary key]
+    date_created DATETIME 
+    customer_id INTEGER 
+    employee_id INTEGER 
+    }
+
+Table Payment {
+    id INTEGER [primary key]
+    invoice_id INTEGER 
+    amount_paid FLOAT 
+    payment_date DATETIME 
+    }
+
+Table Supplier {
+    id INTEGER [primary key]
+    name VARCHAR 
+    }
+
+Table Project {
+    id INTEGER [primary key]
+    name VARCHAR 
+    budget FLOAT 
+    department_id INTEGER 
+    }
+
+Table Shipment {
+    id INTEGER [primary key]
+    order_id INTEGER 
+    shipped_date DATETIME 
+    }
+
+
+
+// Relationships
+    Ref: Department.(company_id) < Company.(id)
+    Ref: Employee.(department_id) < Department.(id)
+    Ref: Inventory.(product_id) < Product.(id)
+    Ref: Product.(supplier_id) < Supplier.(id)
+    Ref: Invoice.(order_id) < Order.(id)
+    Ref: Order.(customer_id) < Customer.(id)
+    Ref: Order.(employee_id) < Employee.(id)
+    Ref: Payment.(invoice_id) < Invoice.(id)
+    Ref: Project.(department_id) < Department.(id)
+    Ref: Shipment.(order_id) < Order.(id)
